@@ -183,18 +183,18 @@ paths:
           schema: 
             $ref: '#/definitions/Error'
   /auth/setNewPassword:
-    get: 
+    post:
       summary: Задание нового пароля, если старый был забыт
       description: Нужен для задание нового пароля в случае, если пользователь забыл пароль, ему пришли инструкции на почту(ссылка с ключом), он перешел на нее, ключ был провалидирован.
       tags: 
         - Auth
       parameters: 
         - name: mail
-          in: query
+          in: formData
           description: Почта, аккаунт которой надо восстановить
           type: string
         - name: key
-          in: query
+          in: formData
           description: Ключ, который связан с этой почтой для восстановления пароля
           type: string
       responses:
