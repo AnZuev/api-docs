@@ -4,9 +4,9 @@ info:
   description: "Описание API для авторизации, регистрации, активации и восстановле\
     ния пароля"
   version: "0.1b"
-  title: "IStudent API. Страница приветствия"
+  title: "IStudent API. welcome page"
 host: "localhost:3000"
-basePath: "/0.1b/"
+basePath: "/"
 tags:
 - name: "Регистрация"
   description: "Запросы на регистрацию"
@@ -113,12 +113,17 @@ paths:
       - name: "mail"
         in: "query"
         description: "Почта, аккаунт которой надо восстановить"
-        required: false
+        required: true
         type: "string"
       - name: "key"
         in: "query"
         description: "Ключ, который связан с этой почтой для восстановления пароля"
-        required: false
+        required: true
+        type: "string"
+      - name: "password"
+        in: "query"
+        description: "Новый пароль"
+        required: true
         type: "string"
       responses:
         200:

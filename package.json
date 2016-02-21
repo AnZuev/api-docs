@@ -1,6 +1,6 @@
 {
-  "name": "i-student-api/-страница-приветствия",
-  "version": "0.1b",
+  "name": "API",
+  "version": "0.0.1",
   "description": "Описание API для авторизации, регистрации, активации и восстановления пароля",
   "main": "index.js",
   "keywords": [
