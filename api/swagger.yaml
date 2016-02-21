@@ -1,285 +1,276 @@
----
-swagger: "2.0"
+# this is an example of the Uber API
+# as a demonstration of an API spec in YAML
+swagger: '2.0'
 info:
-  description: "Описание API для авторизации, регистрации, активации и восстановле\
-    ния пароля"
-  version: "0.1b"
-  title: "IStudent API. welcome page"
-host: "localhost:3000"
-basePath: "/"
-tags:
-- name: "Регистрация"
-  description: "Запросы на регистрацию"
-- name: "Активация"
-  description: "Запросы для активации аккаунта"
-- name: "Авторизация"
-  description: "Запросы на авторизацию(вход)"
-- name: "Восстановление пароля"
-  description: "Запросы для восстановления пароля"
+  title: IStudent API.
+  description: Описание API для работы с сервером
+  version: "0.1.2"
+# the domain of the service
+host: pre-api.istudentapp.ru
+# array of all schemes that your API supports
 schemes:
-- "http"
+  - http
+tags: 
+  - name: Auth
+    description: Запросы для выполнения действий, связынных со страницей приветствия(авторизация, регистрация, активация аккаунта и восстановление пароля)
+ 
+# will be prefixed to all paths
+basePath: "/"
 produces:
-- "application/json"
+  - application/json
 paths:
-  /auth/activate:
-    get:
-      tags:
-      - "Активация"
-      summary: "Активировать аккаунт"
-      description: "Нужен для активации аккаунта. Запросом auth/signUp мы создаем\
-        \ неактивированного пользователя, для того, чтобы пользователю была доступ\
-        на основная функциональность - делается такой запрос. По умолчанию он буде\
-        т делаться из письма, которое приходит на почту."
-      operationId: "authActivateGET"
-      parameters:
-      - name: "mail"
-        in: "query"
-        description: "Почта, которую хочешь подтвердить"
-        required: true
-        type: "string"
-      - name: "key"
-        in: "query"
-        description: "Ключ, которым хочешь подтвердить почту"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "Подтверждение почты прошло без ошибок. Вернулся результат\
-            \ либо ok, либо failed"
-          schema:
-            $ref: "#/definitions/activateAnswer"
-        500:
-          description: "Внутренняя ошибка"
-          schema:
-            $ref: "#/definitions/Error"
-      x-swagger-router-controller: "Активация"
-  /auth/forgotPassword:
-    post:
-      tags:
-      - "Восстановление пароля"
-      description: "Нужен для отправки на на почту данных для восстановления парол\
-        я"
-      operationId: "authForgotPasswordPOST"
-      parameters:
-      - name: "mail"
-        in: "formData"
-        description: "Почта, аккаунт которой надо восстановить"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "Все прошло хорошо, инструкции высланы"
-        500:
-          description: "Произошла внутренняя ошибка сервера"
-          schema:
-            $ref: "#/definitions/Error"
-      x-swagger-router-controller: "Восстановление пароля"
-  /auth/resendActivation:
-    post:
-      tags:
-      - "Активация"
-      summary: "Переотправка кода на почту"
-      description: "Нужен в тех случаях, если письмо до человека не дошло и тд."
-      operationId: "authResendActivationPOST"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "mail"
-        in: "formData"
-        description: "Почта, куда необходимо отправить соответствующий ключ"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "Все прошло хорошо, то есть если неактивированный аккаунт с\
-            \ почтой был найден и отправлен код или если аккаунт вообще не был най\
-            ден."
-        500:
-          description: "Ошибка сервера"
-          schema:
-            $ref: "#/definitions/Error"
-      x-swagger-router-controller: "Активация"
-  /auth/setNewPassword:
-    get:
-      tags:
-      - "Восстановление пароля"
-      description: "Нужен для задание нового пароля в случае, если пользователь за\
-        был пароль, ему пришли инструкции на почту(ссылка с ключом), он перешел на\
-        \ нее, ключ был провалидирован."
-      operationId: "authSetNewPasswordGET"
-      parameters:
-      - name: "mail"
-        in: "query"
-        description: "Почта, аккаунт которой надо восстановить"
-        required: true
-        type: "string"
-      - name: "key"
-        in: "query"
-        description: "Ключ, который связан с этой почтой для восстановления пароля"
-        required: true
-        type: "string"
-      - name: "password"
-        in: "query"
-        description: "Новый пароль"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "Все прошло хорошо, пароль сменен"
-        500:
-          description: "Произошла внутренняя ошибка сервера"
-          schema:
-            $ref: "#/definitions/Error"
-      x-swagger-router-controller: "Восстановление пароля"
-  /auth/signIn:
-    post:
-      tags:
-      - "Авторизация"
-      summary: "Авторизация"
-      description: "Нужен для входа уже существующего пользователя"
-      operationId: "authSignInPOST"
-      parameters:
-      - name: "mail"
-        in: "formData"
-        description: "Почта для входа"
-        required: true
-        type: "string"
-      - name: "password"
-        in: "formData"
-        description: "Пароль"
-        required: true
-        type: "string"
-        format: "password"
-      responses:
-        200:
-          description: "Авторизация прошла успешно, возвращаем объект пользователя"
-          schema:
-            $ref: "#/definitions/UserInfo"
-        401:
-          description: "Ошибка авторизации(неверный пароль или почта)"
-          schema:
-            $ref: "#/definitions/Error"
-        500:
-          description: "Ошибка сервера"
-          schema:
-            $ref: "#/definitions/Error"
-      x-swagger-router-controller: "Авторизация"
   /auth/signUp:
     post:
-      tags:
-      - "Регистрация"
-      summary: "Регистрация нового пользователя"
-      description: "Запрос нужен для создания на сервере нового НЕактивированного\
-        \ пользователя. Так происходит первый шаг регистрации."
-      operationId: "authSignUpPOST"
+      summary: Регистрация нового пользователя
+      description: Запрос нужен для создания на сервере нового НЕактивированного пользователя. Так происходит первый шаг регистрации. 
       parameters:
-      - name: "name"
-        in: "formData"
-        description: "Имя студента"
-        required: true
-        type: "string"
-      - name: "surname"
-        in: "formData"
-        description: "Фамилия студента"
-        required: true
-        type: "string"
-      - name: "password"
-        in: "formData"
-        description: "Пароль"
-        required: true
-        type: "string"
-      - name: "studNumber"
-        in: "formData"
-        description: "Номер студенческого билета"
-        required: true
-        type: "string"
-      - name: "year"
-        in: "formData"
-        description: "Курс"
-        required: true
-        type: "string"
-      - name: "university"
-        in: "formData"
-        description: "Университет"
-        required: true
-        type: "integer"
-      - name: "faculty"
-        in: "formData"
-        description: "Факультет"
-        required: true
-        type: "integer"
-      - name: "group"
-        in: "formData"
-        description: "Группа"
-        required: true
-        type: "integer"
-      - name: "mail"
-        in: "formData"
-        description: "Почта"
-        required: true
-        type: "string"
+        - name: name
+          in: formData
+          description: Имя студента
+          required: true
+          type: string
+        - name: surname
+          in: formData
+          description: Фамилия студента
+          required: true
+          type: string
+        - name: password
+          in: formData
+          description: Пароль
+          required: true
+          type: string
+        - name: studNumber
+          in: formData
+          description: Номер студенческого билета
+          required: true
+          type: string
+        - name: year
+          in: formData
+          description: Курс
+          required: true
+          type: string
+        - name: university
+          in: formData
+          description: Университет
+          required: true
+          type: integer
+        - name: faculty
+          in: formData
+          description: Факультет
+          required: true
+          type: integer
+        - name: group
+          in: formData
+          description: Группа
+          required: true
+          type: integer
+        - name: mail
+          in: formData
+          description: Почта
+          required: true
+          type: string
+
+      tags:
+        - Auth
       responses:
         200:
-          description: "Создан неактивированный пользователь"
+          description: Создан неактивированный пользователь
           schema:
-            $ref: "#/definitions/noActivatedAnswer"
+            $ref: '#/definitions/noActivatedAnswer'
         400:
-          description: "Ошибка в случае, если исходные данные не прошли валидацию\
-            \ на стороне сервера"
+          description: Ошибка в случае, если исходные данные не прошли валидацию на стороне сервера
+          schema: 
+            $ref: '#/definitions/Error'
+  /auth/activate:
+    get:
+      summary: Активировать аккаунт
+      description: Нужен для активации аккаунта. Запросом auth/signUp мы создаем неактивированного пользователя, для того, чтобы пользователю была доступна основная функциональность - делается такой запрос. По умолчанию он будет делаться из письма, которое приходит на почту.
+      parameters:
+        - name: mail
+          in: query
+          description: Почта, которую хочешь подтвердить
+          required: true
+          type: string
+        - name: key
+          in: query
+          description: Ключ, которым хочешь подтвердить почту
+          required: true
+          type: string
+      tags:
+        - Auth
+      responses:
+        200:
+          description: Подтверждение почты прошло без ошибок. Вернулся результат либо ok, либо failed
           schema:
-            $ref: "#/definitions/Error"
-      x-swagger-router-controller: "Регистрация"
+            $ref: '#/definitions/activateAnswer'
+        500:
+          description: Внутренняя ошибка
+          schema:
+            $ref: '#/definitions/Error'
+  /auth/resendActivation: 
+    post:
+      summary: Переотправка кода на почту
+      description: Нужен в тех случаях, если письмо до человека не дошло и тд.
+      consumes: [
+          'application/json'
+        ]
+      produces: [
+        'application/json'
+        ]
+      parameters: 
+        - name: mail
+          in: formData
+          description: Почта, куда необходимо отправить соответствующий ключ
+          type: string
+          required: true
+      tags:
+        - Auth
+      responses:
+        200:
+          description: Все прошло хорошо, то есть если неактивированный аккаунт с почтой был найден и отправлен код или если аккаунт вообще не был найден.
+        500:
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/Error'
+  /auth/signIn:
+    post:
+      summary: Авторизация
+      description: Нужен для входа уже существующего пользователя
+      tags:
+        - Auth
+      parameters:
+        - name: mail
+          in: formData
+          description: Почта для входа
+          type: string
+          required: true
+        - name: password
+          in: formData
+          description: Пароль
+          type: string
+          format: password
+          required: true
+      responses:
+        200:
+          description: Авторизация прошла успешно, возвращаем объект пользователя
+          schema:
+            $ref: '#/definitions/UserInfo'
+        401:
+          description: Ошибка авторизации(неверный пароль или почта)
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/Error'
+  /auth/forgotPassword:
+    post: 
+      summary: Забыли пароль
+      description: Нужен для отправки на на почту данных для восстановления пароля
+      tags: 
+        - Auth
+      parameters: 
+        - name: mail
+          in: formData
+          description: Почта, аккаунт которой надо восстановить
+          type: string
+          required: true
+      responses:
+        200:
+          description: Все прошло хорошо, инструкции высланы
+        500: 
+          description: Произошла внутренняя ошибка сервера
+          schema: 
+            $ref: '#/definitions/Error'
+  /auth/setNewPassword:
+    get: 
+      summary: Задание нового пароля, если старый был забыт
+      description: Нужен для задание нового пароля в случае, если пользователь забыл пароль, ему пришли инструкции на почту(ссылка с ключом), он перешел на нее, ключ был провалидирован.
+      tags: 
+        - Auth
+      parameters: 
+        - name: mail
+          in: query
+          description: Почта, аккаунт которой надо восстановить
+          type: string
+        - name: key
+          in: query
+          description: Ключ, который связан с этой почтой для восстановления пароля
+          type: string
+      responses:
+        200:
+          description: Все прошло хорошо, пароль сменен
+        500: 
+          description: Произошла внутренняя ошибка сервера
+          schema: 
+            $ref: '#/definitions/Error'
+  /auth/logout: 
+    post: 
+      summary: Выход из сайта/приложения
+      description: Нужен для завершения сессии
+      tags: 
+        - Auth
+      responses:
+        200: 
+          description: ok
+        500: 
+          description: Произошла ошибка сервера
+          schema:
+            $ref: '#/definitions/Error'
+        
+ 
 definitions:
   noActivatedAnswer:
-    type: "object"
+    type: object
     properties:
       name:
-        type: "string"
-        description: "Имя только что созданного пользователя"
-      mail:
-        type: "string"
-        description: "Почта, на которую отправлено подтверждение"
+        type: string
+        description: Имя только что созданного пользователя
+      mail: 
+        type: string
+        description: Почта, на которую отправлено подтверждение
   activateAnswer:
-    type: "object"
+    type: object
     properties:
       result:
-        type: "string"
-        description: "Результат активации. { ok, failed }"
+        type: string
+        description: Результат активации. { ok, failed }
+     
   UserInfo:
-    type: "object"
+    type: object
     properties:
       id:
-        type: "string"
-        description: "Глобальный идентификатор пользователя в системе"
+        type: string
+        description: Глобальный идентификатор пользователя в системе
       name:
-        type: "string"
-        description: "Имя"
+        type: string
+        description: Имя
       surname:
-        type: "string"
-        description: "Фамилия"
+        type: string
+        description: Фамилия
       photo:
-        type: "string"
-        description: "Ссылка на фотографию"
+        type: string
+        description: Ссылка на фотографию
       year:
-        type: "number"
-        description: "Курс"
+        type: number
+        description: Курс
       faculty:
-        type: "string"
-        description: "Факультет"
+        type: string
+        description: Факультет
       university:
-        type: "string"
-        description: "Университет"
+        type: string
+        description: Университет
       group:
-        type: "number"
-        description: "Группа"
+        type: number
+        description: Группа
+        
   Error:
-    type: "object"
+    type: object
     properties:
       exception:
-        type: "boolean"
+        type: boolean
       message:
-        type: "string"
+        type: string
       code:
-        type: "number"
+        type: number
+
