@@ -6,7 +6,7 @@ info:
   description: Описание API для работы с сервером
   version: "0.1.2"
 # the domain of the service
-host: pre-api.istudentapp.ru
+host: pre-api.istudentapp.ru #localhost:3000
 # array of all schemes that your API supports
 schemes:
   - http
@@ -48,21 +48,21 @@ paths:
           in: formData
           description: Курс
           required: true
-          type: string
+          type: number
         - name: university
           in: formData
           description: Университет
           required: true
-          type: integer
+          type: string
         - name: faculty
           in: formData
           description: Факультет
           required: true
-          type: integer
+          type: string
         - name: group
           in: formData
           description: Группа
-          required: true
+          required: false
           type: integer
         - name: mail
           in: formData
@@ -159,6 +159,10 @@ paths:
           description: Ошибка авторизации(неверный пароль или почта)
           schema:
             $ref: '#/definitions/Error'
+        405:
+          description: Авторизация прошла успешно, но аккаунт еще не активирован(exception:true, code:405)
+          schema:
+           $ref: '#/definitions/Error'
         500:
           description: Ошибка сервера
           schema:
