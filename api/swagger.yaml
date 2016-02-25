@@ -13,6 +13,8 @@ schemes:
 tags: 
   - name: Auth
     description: Запросы для выполнения действий, связынных со страницей приветствия(авторизация, регистрация, активация аккаунта и восстановление пароля)
+  - name: University
+    description: Запросы для получения списка универов, факультетов, поиск по ним, добавление и тд.
  
 # will be prefixed to all paths
 basePath: "/"
@@ -221,7 +223,142 @@ paths:
           description: Произошла ошибка сервера
           schema:
             $ref: '#/definitions/Error'
-        
+  
+  /universities/getUniversities: 
+    get:
+      summary: Получить список из n универов( сейчас n = 20)
+      description: Нужен для получения списка универов при регистрации. Можно передать дополнительный параметр title для поиска по названию
+      parameters: 
+        - name: title
+          in: query
+          description: Строка, по которой ищутся универы
+          required: false
+          type: string
+      tags:
+        - University
+      responses:
+        200:
+          description: Получен список универов
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/universityItem'
+        204: 
+          description: Ничего не найдено
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Внутренняя ошибка
+          schema:
+            $ref: '#/definitions/Error'
+  /universities/getFaculties: 
+    get:
+      summary: Получить список из n факультетов( сейчас n = 20)
+      description: Нужен для получения списка универов при регистрации.
+      tags:
+        - University
+      parameters: 
+        - name: title
+          in: query
+          description: Строка, по которой ищутся факультеты
+          required: false
+          type: string
+        - name: university
+          in: query
+          description: идентификатор универа, в рамках которого ищем/возвращаем факультеты
+          required: true
+          type: string
+      responses:
+        200:
+          description: Получен список факультетов
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/facultyItem'
+        204: 
+          description: Ничего не найдено
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Внутренняя ошибка
+          schema:
+            $ref: '#/definitions/Error'
+  /universities/addUniversity:
+    post:
+      summary: Добавление нового универа
+      description: Запрос нужен для добавления нового универа
+      tags:
+        - University
+      parameters:
+        - name: title
+          in: formData
+          description: Название университета, по которому его можно будет найти
+          type: string
+          required: true
+        - name: city
+          in: formData
+          description: Город, в котором расположен универ
+          type: string
+          required: true
+        - name: street
+          in: formData
+          description: Улица, на которой расположен универ
+          type: string
+          required: true
+        - name: building
+          in: formData
+          description: Номер дома
+          type: string
+          required: true
+        - name: rating
+          in: formData
+          description: Рейтинг универа(все универы при поиске сортируются по рейтингу)
+          type: number
+          required: true
+      responses:
+        200:
+          description: Все прошло хорошо, университет добавлен
+          schema:
+            $ref: '#/definitions/universityItem'
+        400:
+          description: Переданы не все необходимые данные
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/Error'
+  /universities/addFaculty:
+    post:
+      summary: Добавление нового факультета в универ
+      description: Запрос нужен для добавления нового факультета
+      tags:
+        - University
+      parameters:
+        - name: title
+          in: formData
+          description: Название факультета
+          type: string
+          required: true
+        - name: university
+          in: formData
+          description: Идентификатор университета
+          type: string
+          required: true
+    
+      responses:
+        200:
+          description: Все прошло хорошо, факультет добавлен
+          schema:
+            $ref: '#/definitions/facultyItem'
+        400:
+          description: Переданы не все необходимые данные или такой факультет уже есть
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/Error'
  
 definitions:
   noActivatedAnswer:
@@ -267,6 +404,27 @@ definitions:
       group:
         type: number
         description: Группа
+        
+  universityItem:
+    type: object
+    properties:
+      id:
+        type: string
+        description: идентификатор университета
+      title:
+        type: string
+        description: Название университета
+      
+  facultyItem:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Идентификатор факультета
+      title:
+        type: string
+        description: Название факультета
+  
         
   Error:
     type: object
