@@ -6,7 +6,7 @@ info:
   description: Описание API для работы с сервером
   version: "0.1.2"
 # the domain of the service
-host: pre-api.istudentapp.ru #localhost:3000
+host: pre-api.istudentapp.ru
 # array of all schemes that your API supports
 schemes:
   - http
@@ -65,7 +65,7 @@ paths:
           in: formData
           description: Группа
           required: false
-          type: integer
+          type: string
         - name: mail
           in: formData
           description: Почта
@@ -234,6 +234,11 @@ paths:
           description: Строка, по которой ищутся универы
           required: false
           type: string
+        - name: format
+          in: query
+          description: В каком формате выдавать ответ(по умолчанию в полном)
+          required: false
+          type: string
       tags:
         - University
       responses:
@@ -295,6 +300,11 @@ paths:
           description: Название университета, по которому его можно будет найти
           type: string
           required: true
+        - name: shortTitle
+          in: formData
+          description: Краткое название
+          type: string
+          required: true
         - name: city
           in: formData
           description: Город, в котором расположен универ
@@ -350,7 +360,12 @@ paths:
         200:
           description: Все прошло хорошо, факультет добавлен
           schema:
-            $ref: '#/definitions/facultyItem'
+            type: object
+            properties:
+              result:
+                type: string
+                description: Результат добавления
+
         400:
           description: Переданы не все необходимые данные или такой факультет уже есть
           schema:
