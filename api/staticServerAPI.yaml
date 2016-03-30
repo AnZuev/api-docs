@@ -1,0 +1,169 @@
+# Example YAML to get you started quickly.
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "0.0.0"
+  title: Static server
+host: pre-static.istudentapp.ru
+tags: 
+  - name: upload
+    description: Запросы для выполнения pfuheprb
+  - name: get|download
+    description: Запросы для получения файла
+ 
+schemes:
+  - http
+# Describe your paths here
+
+paths:
+  # This is a path endpoint. Change it.
+  /private/uploadAvatar:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown
+      description:  Загрузка аватара на сервер
+      # This is array of GET operation parameters:
+      parameters:
+        - name: avatar
+          in: formData
+          description: Файл для загрузки
+          required: true
+          type: file
+      tags: 
+        - upload
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Фотография успешно добавлена
+          schema:
+            title: result
+            type: object
+            properties:
+              result:
+                type: boolean
+              url:
+                type: string
+        400:
+          description: Ошибка по вине пользователя(недопустимый формат файла, файл слишком большой или еще что-то). code=400, exception=true, message = описанию ошибки
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Серверная ошибка(ошибка соединения с базой данных или еще что-то). code=500, exception=true, message = описанию ошибки. 
+           (если в описании указано, что это необработанная ошибка - срочно сообщаем разработчику)
+          schema:
+            $ref: '#/definitions/Error'
+  /private/uploadPrivateDocument:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown
+      description:  Загрузка документа для частного просмотра(документ внутри диалога и тд) на сервер
+      # This is array of GET operation parameters:
+      parameters:
+        - name: document
+          in: formData
+          description: Файл для загрузки
+          required: true
+          type: file
+      tags:
+               - upload
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Документ успешно добавлен
+          schema:
+            title: result
+            type: object
+            properties:
+              result:
+                type: boolean
+              url:
+                type: string
+        400:
+          description: Ошибка по вине пользователя(недопустимый формат файла, файл слишком большой или еще что-то). code=400, exception=true, message = описанию ошибки
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Серверная ошибка(ошибка соединения с базой данных или еще что-то). code=500, exception=true, message = описанию ошибки. 
+            (если в описании указано, что это необработанная ошибка - срочно сообщаем разработчику)
+          schema:
+            $ref: '#/definitions/Error'
+  /private/uploadPrivatePhoto:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown
+      description:  Загрузка фотографии для частного просмотра(документ внутри диалога и тд) на сервер
+      # This is array of GET operation parameters:
+      parameters:
+        - name: photo
+          in: formData
+          description: Файл для загрузки
+          required: true
+          type: file
+      tags:
+               - upload
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Фотография успешно добавлена
+          schema:
+            title: result
+            type: object
+            properties:
+              result:
+                type: boolean
+              url:
+                type: string
+        400:
+          description: Ошибка по вине пользователя(недопустимый формат файла, файл слишком большой или еще что-то). code=400, exception=true, message = описанию ошибки
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Серверная ошибка(ошибка соединения с базой данных или еще что-то). code=500, exception=true, message = описанию ошибки. 
+            (если в описании указано, что это необработанная ошибка - срочно сообщаем разработчику)
+          schema:
+            $ref: '#/definitions/Error'
+  
+  /files:
+    get:
+      summary: Получить файл по урлу
+      description: Нужен для получения файла
+      tags:
+        - get|download
+      schemes:
+        - http
+      parameters: 
+        - name: url
+          in: query
+          description: URL файла
+          required: false
+          type: string
+      responses:
+        200:
+          description: Получен файл
+          schema:
+            type: file
+        403: 
+          description: Не найден файл с таким url и доступный для пользователя
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Серверная ошибка(если в описании указано, что это необработанная ошибка - срочно сообщаем разработчику)
+          schema:
+            $ref: '#/definitions/Error'
+
+definitions:
+  Error:
+    type: object
+    properties:
+      exception:
+        type: boolean
+      message:
+        type: string
+      code:
+        type: number

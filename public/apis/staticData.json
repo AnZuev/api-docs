@@ -1,0 +1,290 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Static data",
+        "description": "Описание API для работы c статическими данными(универы, факультеты, предметы, типы работ и тд)",
+        "version": "0.1.2"
+    },
+    "host": "pre-api.istudentapp.ru",
+    "schemes": [
+        "http"
+    ],
+    "tags": [
+        {
+            "name": "Университеты",
+            "description": "Запросы для работы с универами"
+        },
+        {
+            "name": "Факультеты",
+            "description": "Запросы для работы с универами"
+        }
+    ],
+    "basePath": "/",
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/universities/getUniversities": {
+            "get": {
+                "summary": "Получить список из n универов( сейчас n = 20)",
+                "description": "Нужен для получения списка универов при регистрации. Можно передать дополнительный параметр title для поиска по названию",
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "Строка, по которой ищутся универы",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "description": "В каком формате выдавать ответ(по умолчанию в полном)",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Университеты"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Получен список универов",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/universityItem"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "Ничего не найдено",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/universities/getFaculties": {
+            "get": {
+                "summary": "Получить список из n факультетов( сейчас n = 20)",
+                "description": "Нужен для получения списка универов при регистрации.",
+                "tags": [
+                    "Факультеты"
+                ],
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "Строка, по которой ищутся факультеты",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "university",
+                        "in": "query",
+                        "description": "идентификатор универа, в рамках которого ищем/возвращаем факультеты",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Получен список факультетов",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/facultyItem"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "Ничего не найдено",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/universities/addUniversity": {
+            "post": {
+                "summary": "Добавление нового универа",
+                "description": "Запрос нужен для добавления нового универа",
+                "tags": [
+                    "Университеты"
+                ],
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "formData",
+                        "description": "Название университета, по которому его можно будет найти",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "shortTitle",
+                        "in": "formData",
+                        "description": "Краткое название",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "city",
+                        "in": "formData",
+                        "description": "Город, в котором расположен универ",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "street",
+                        "in": "formData",
+                        "description": "Улица, на которой расположен универ",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "building",
+                        "in": "formData",
+                        "description": "Номер дома",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "rating",
+                        "in": "formData",
+                        "description": "Рейтинг универа(все универы при поиске сортируются по рейтингу)",
+                        "type": "number",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Все прошло хорошо, университет добавлен",
+                        "schema": {
+                            "$ref": "#/definitions/universityItem"
+                        }
+                    },
+                    "400": {
+                        "description": "Переданы не все необходимые данные",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/universities/addFaculty": {
+            "post": {
+                "summary": "Добавление нового факультета в универ",
+                "description": "Запрос нужен для добавления нового факультета",
+                "tags": [
+                    "Факультеты"
+                ],
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "formData",
+                        "description": "Название факультета",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "university",
+                        "in": "formData",
+                        "description": "Идентификатор университета",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Все прошло хорошо, факультет добавлен",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "result": {
+                                    "type": "string",
+                                    "description": "Результат добавления"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Переданы не все необходимые данные или такой факультет уже есть",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "universityItem": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "идентификатор университета"
+                },
+                "title": {
+                    "type": "string",
+                    "description": "Название университета"
+                }
+            }
+        },
+        "facultyItem": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Идентификатор факультета"
+                },
+                "title": {
+                    "type": "string",
+                    "description": "Название факультета"
+                }
+            }
+        },
+        "Error": {
+            "type": "object",
+            "properties": {
+                "exception": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "number"
+                }
+            }
+        }
+    }
+}

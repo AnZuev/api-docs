@@ -1,16 +1,13 @@
 {
   "name": "API",
   "version": "0.0.1",
-  "description": "Описание API для авторизации, регистрации, активации и восстановления пароля",
+  "description": "Описание API",
   "main": "index.js",
-  "keywords": [
-    "swagger"
-  ],
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "connect": "^3.2.0",
-    "js-yaml": "^3.3.0",
-    "swagger-tools": "0.9.*"
+    "connect": "*",
+    "morgan": "*",
+    "serve-static":"*"
   }
 }
