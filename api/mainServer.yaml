@@ -9,6 +9,8 @@ schemes:
 tags: 
   - name: Auth
     description: Запросы для выполнения действий, связынных со страницей приветствия(авторизация, регистрация, активация аккаунта и восстановление пароля)
+  - name: Documents
+    description: Запросы для выполнения действий, связынных c базой знаний
  
 # will be prefixed to all paths
 basePath: "/"
@@ -224,8 +226,342 @@ paths:
           description: Произошла ошибка сервера
           schema:
             $ref: '#/definitions/Error'
+            
+  /documents/addDocument:
+    post:
+        summary: Добавление нового документа в базу знаний
+        description: Нужен для добавления нового документа в базу знаний
+        tags: 
+          - Documents
+        parameters: 
+          - name: document
+            in: body
+            description: Объект документа
+            schema: 
+              $ref: '#/definitions/documentItemRequest'
+            required: true
+         
+        responses:
+          200:
+            description: Все прошло хорошо, документ успешно добавлен
+            schema:
+              $ref: '#/definitions/documentItemResponse'
+          401:
+            description: Пользователь не авторизован(code = 401)
+            schema:
+              $ref: '#/definitions/Error'
+          405:
+            description: Действие запрещено, но аккаунт еще не активирован(exception:true, code:405)
+            schema:
+              $ref: '#/definitions/Error'
+          500: 
+            description: Произошла внутренняя ошибка сервера
+            schema: 
+              $ref: '#/definitions/Error'
   
+  /documents/getDocumentsBy:
+    get:
+      summary: Получение документов по каким-то критериям
+      description: Возвращает найденные документы по критериям. Критерии можно комбинировать в любом сочетании
+      tags: 
+        - Documents
+      parameters:
+        - name: university
+          in: query
+          description: Универ, в рамках которого искать работу
+          type: string
+        - name: faculty
+          in: query
+          description: Факультет, в рамках которого искать работу
+          type: string
+        - name: year
+          in: query
+          description: Курс, в рамках которого искать работу
+          type: integer
+        - name: subject
+          in: query
+          description: Предмет, по которому ищется работа
+          type: string
+        - name: type
+          in: query
+          description: Тип работы
+          type: string
+        - name: title
+          in: query
+          description: Начало названия
+          type: string
+        - name: skip
+          in: query
+          description: Сколько пропустить документов в начале
+          type: number
+          default: 0
+      responses:
+         200:
+            description: Все прошло хорошо, документа найдены
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/documentItemSuggest'
+         204:
+            description: Все прошло хорошо, но ничего не найдено
+         405:
+          description: Действие запрещено, так как аккаунт еще не активирован(exception:true, code:405)
+          schema:
+           $ref: '#/definitions/Error'  
+         500:
+            description: Произошла внутренняя ошибка сервера
+            schema: 
+              $ref: '#/definitions/Error' 
+              
+  /documents/getDocumentById:
+    get:
+      summary: Получение подробной информации о документе
+      description: Нужно для загрузки полной информации о документе
+      tags: 
+        - Documents
+      parameters:
+        - name: id
+          in: query
+          type: string
+          description: id документа
+          required: true
+      responses:
+        200:
+          description: Все прошло хорошо, документ получен
+          schema:
+            $ref: '#/definitions/documentItemResponse'
+        404:
+          description: Документ не найден( code = 404 )
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Ошибка
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /documents/getComments:
+    get:
+      summary: Получение последних 20 комментариев
+      description: Получить последние 20 комментариев
+      parameters:
+        - name: id
+          type: string
+          in: query
+          required: true
+        - name: skipFromEnd
+          type: integer
+          in: query
+          required: true
+        
+      tags:
+        - Documents
+      responses:
+        200:
+          description: Все прошло хорошо, комментарии получены
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/commentItem'
+        204:
+          description: Все прошло хорошо, но комментариев не найдено
+          schema:
+            type: array
+            items:
+              type: object
+        405:
+          description: Действие запрещено, так как аккаунт еще не активирован(exception:true, code:405)
+          schema:
+           $ref: '#/definitions/Error'  
+        404:
+          description: Документ не найден( code = 404 )
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Ошибка
+          schema:
+            $ref: '#/definitions/Error'
 
+  /document/addComment:
+     post:
+      summary: Добавление нового комментария
+      description: Добавление нового комментария к документу.
+      parameters: 
+          - name: comment
+            in: formData
+            description: Комментарий
+            type: string
+            required: true
+            
+          - name: id
+            in: formData
+            description: id документа
+            type: string
+            required: true
+            
+         
+      tags:
+        - Documents
+      responses:
+        200:
+          description: Все прошло хорошо, комментарий добавлен
+          schema:
+              $ref: '#/definitions/commentItem'
+        
+        404:
+          description: Документ не найден( code = 404 )
+          schema:
+            $ref: '#/definitions/Error'
+        405:
+          description: Действие запрещено, так как аккаунт еще не активирован(exception:true, code:405)
+          schema:
+           $ref: '#/definitions/Error'  
+        500:
+          description: Ошибка
+          schema:
+            $ref: '#/definitions/Error'
+           
+  /document/addLike:
+     post:
+      summary: Добавление like документу
+      description: Добавление like документу
+      parameters: 
+          - name: id
+            in: formData
+            description: id документа
+            type: string
+            required: true
+      tags:
+        - Documents
+      responses:
+        200:
+          description: Все прошло хорошо, like добавлен
+          schema:
+              type: object
+              properties:
+                done:
+                  type: boolean
+                  description: значение - true
+        404:
+          description: Документ не найден( code = 404 )
+          schema:
+            $ref: '#/definitions/Error'
+        405:
+          description: Действие запрещено, так как аккаунт еще не активирован(exception:true, code:405)
+          schema:
+           $ref: '#/definitions/Error'  
+        500:
+          description: Ошибка
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /document/addDislike:
+     post:
+      summary: Добавление dislike документу
+      description: Добавление dislike документу
+      parameters: 
+          - name: id
+            in: formData
+            description: id документа
+            type: string
+            required: true
+      tags:
+        - Documents
+      responses:
+        200:
+          description: Все прошло хорошо, dislike добавлен
+          schema:
+              type: object
+              properties:
+                done:
+                  type: boolean
+                  description: значение - true
+        404:
+           description: Документ не найден( code = 404 )
+           schema:
+             $ref: '#/definitions/Error'
+        405:
+          description: Действие запрещено, так как аккаунт еще не активирован(exception:true, code:405)
+          schema:
+           $ref: '#/definitions/Error'  
+        500:
+          description: Ошибка
+          schema:
+            $ref: '#/definitions/Error'
+  
+  /documents/addPart:
+    post:
+        summary: Добавление части к документу
+        description: Нужен для добавления файлы к объекту документа
+        tags: 
+          - Documents
+        parameters: 
+          - name: part
+            in: body
+            description: Объект части(part)
+            schema: 
+              $ref: '#/definitions/partItem'
+            required: true
+         
+        responses:
+          200:
+            description: Все прошло хорошо, часть успешно добавлена к документу
+            schema:
+              $ref: '#/definitions/documentItemResponse'
+          401:
+            description: Пользователь не авторизован(code = 401)
+            schema:
+              $ref: '#/definitions/Error'
+          403:
+            description: Действие запрещено(либо документ не найден, либо документ не принадлежит пользователю code = 403)
+            schema:
+              $ref: '#/definitions/Error'
+          405:
+            description: Действие запрещено, так как аккаунт еще не активирован(exception:true, code:405)
+            schema:
+              $ref: '#/definitions/Error'
+          500: 
+            description: Произошла внутренняя ошибка сервера
+            schema: 
+              $ref: '#/definitions/Error'
+  
+  /documents/removePart:
+    post:
+        summary: Удаление части из документа
+        description: Нужен для удаления файла из объекта документа
+        tags: 
+          - Documents
+        parameters: 
+          - name: partId
+            in: formData
+            description: id части(part)
+            type: string
+            required: true
+          - name: documentId
+            in: formData
+            description: id документа
+            type: string
+            required: true
+        responses:
+          200:
+            description: Все прошло хорошо, часть успешно добавлена к документу
+            schema:
+              $ref: '#/definitions/documentItemResponse'
+          401:
+            description: Пользователь не авторизован(code = 401)
+            schema:
+              $ref: '#/definitions/Error'
+          403:
+            description: Действие запрещено(либо документ не найден, либо документ не принадлежит пользователю)
+            schema:
+              $ref: '#/definitions/Error'
+          405:
+            description: Действие запрещено, так как аккаунт еще не активирован(exception:true, code:405)
+            schema:
+              $ref: '#/definitions/Error'
+          500: 
+            description: Произошла внутренняя ошибка сервера
+            schema: 
+              $ref: '#/definitions/Error'
 definitions:
   noActivatedAnswer:
     type: object
@@ -270,8 +606,164 @@ definitions:
       group:
         type: number
         description: Группа
-  
         
+  partItem:
+      type: object
+      properties:
+        id: 
+          type: string
+          description: id файла в коллекцтт files
+        url:
+          type: string
+          description: ссылка для доступа к файлу
+  
+  documentItemRequest:
+    type: object
+    properties:
+      title:
+        type: string
+        description: Название документа
+      search:
+        type: object
+        description: Информация для поиска
+        properties:
+          university:
+            type: string
+            description: Id университета(если не передано, используется универ пользователя)
+          faculty:
+            type: string
+            description: Id факультета(если не передано, используется факультет пользователя)
+          subject:
+            type: string
+            description: Id предмета(из staticData)
+          type:
+            type: string
+            description: Id типа(из staticData)
+          year:
+            type: integer
+            description: Id предмета(из staticData)
+      parts:
+        type: array
+        description: Массив файлов статики
+        items: 
+          $ref: '#/definitions/partItem'
+  documentItemResponse:
+    type: object
+    properties:
+      id: 
+        type: string
+        description: id документа в коллекции documents
+      title:
+        type: string
+        description: Название документа
+      parts:
+        type: array
+        description: Массив файлов статики
+        items: 
+          $ref: '#/definitions/partItem'
+      author: 
+        type: object
+        description: Кто добавил
+        properties:
+          username:
+            type: string
+            description: Имя пользователя для отображения
+          id:
+            type: string
+            description: id юзера, который добавил
+      social:
+        type: object
+        properties:
+          downloads:
+            type: integer
+            description: Количество скачивание
+          watches:
+            type: integer
+            description: Количество просмотров
+          likes:
+            type: integer
+            description: Количество лайков
+          dislikes:
+            type: integer
+            description: Количество дислайков
+      created:
+        type: string
+        description: Дата добавления
+      comments:
+        type: array
+        items:
+          $ref: '#/definitions/commentItem'
+        
+  documentItemSuggest:
+    type: object
+    properties:
+      id: 
+        type: string
+        description: id документа в коллекции documents
+      title:
+        type: string
+        description: Название документа
+      author: 
+        type: object
+        description: Кто добавил
+        properties:
+          username:
+            type: string
+            description: Имя пользователя для отображения
+          id:
+            type: string
+            description: id юзера, который добавил
+      social:
+        type: object
+        properties:
+          downloads:
+            type: integer
+            description: Количество скачивание
+          watches:
+            type: integer
+            description: Количество просмотров
+          likes:
+            type: integer
+            description: Количество лайков
+          dislikes:
+            type: integer
+            description: Количество дислайков
+          relation:
+            type: string
+            description: Отношение(liked, disliked, none) 
+      date:
+        type: string
+        description: Дата добавления      
+  
+  commentItem:
+    type: object
+    properties:
+      author:
+        type: object
+        properties:
+          username: 
+            type: string
+            description: Имя юзера, который оставил комментарий
+          id:
+            type: string
+            description: id пользователя, который оставил комментарий
+      text:
+        type: string
+        description: Текст сообщения
+      created:
+        type: string
+        description: Дата создания
+      id:
+        type: string
+        description: id комменария
+        
+  commentItemRequest:
+    type: object
+    properties:
+      text:
+        type: string
+        description: Текст сообщения
+      
   Error:
     type: object
     properties:
