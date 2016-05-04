@@ -11,12 +11,12 @@
     ],
     "tags": [
         {
-            "name": "Университеты",
-            "description": "Запросы для работы с универами"
+            "name": "University",
+            "description": "Запросы для получения списка универов, факультетов, поиск по ним, добавление и тд."
         },
         {
-            "name": "Факультеты",
-            "description": "Запросы для работы с универами"
+            "name": "Subjects",
+            "description": "Запросы для работы с предметами (добавление, поиск, удаление, смена статуса)."
         }
     ],
     "basePath": "/",
@@ -24,6 +24,289 @@
         "application/json"
     ],
     "paths": {
+        "/subjects/getSubjects": {
+            "get": {
+                "summary": "Получить список из N предметов удовлетворяющих запросу",
+                "description": "Нужен для получения предмета при поиске по названию. Если запрос пустой - выводятся все доступные предметы.",
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "строка, по которой ищутся предметы",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Subjects"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Получен список предметов",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/subjectItem"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "Ничего не найдено",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/subjects/addSubject": {
+            "get": {
+                "summary": "Добавление предмета",
+                "description": "Нужен для добавления предмета по названию. Доступен только администраторам.",
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "formData",
+                        "description": "строка, которая является названием",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Subjects"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Получен id добавленного предмета и его название.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/subjectItem"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Не переданы все необходимые данные",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Ошибка доступа",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/subjects/changeName": {
+            "get": {
+                "summary": "Изменение названия предмета.",
+                "description": "Нужен для изменения названия предмета. Доступен только администраторам.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "formData",
+                        "description": "id предмета, который хотим изменить.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "newTitle",
+                        "in": "formData",
+                        "description": "строка, которая является новым названием",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Subjects"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "true если все прошло успешно.",
+                        "schema": {
+                            "type": "boolean",
+                            "items": {
+                                "$ref": "#/definitions/subjectItem"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Не переданы все необходимые данные",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Ошибка доступа",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/subjects/removeSubject": {
+            "get": {
+                "summary": "Удаление предмета",
+                "description": "Нужен для удаления предмета по id. Доступен только администраторам.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "formData",
+                        "description": "id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Subjects"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Если все прошло успешно то получаем true.",
+                        "schema": {
+                            "type": "boolean",
+                            "items": {
+                                "$ref": "#/definitions/subjectItem"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Не переданы все необходимые данные",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Ошибка доступа",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/subjects/activate": {
+            "get": {
+                "summary": "Активация предмета",
+                "description": "Нужен для активации предмета по id. Доступен только администраторам.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "formData",
+                        "description": "строка, которая является названием",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Subjects"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Если все прошло успешно - true.",
+                        "schema": {
+                            "type": "boolean",
+                            "items": {
+                                "$ref": "#/definitions/subjectItem"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Не переданы все необходимые данные",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Ошибка доступа",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/subjects/deactivate": {
+            "get": {
+                "summary": "Деактивация предмета",
+                "description": "Нужен для деактивации предмета по id. Доступен только администраторам",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "formData",
+                        "description": "строка, которая является названием",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Subjects"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Если все прошло успешно - true.",
+                        "schema": {
+                            "type": "boolean",
+                            "items": {
+                                "$ref": "#/definitions/subjectItem"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Не переданы все необходимые данные",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Ошибка доступа",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
         "/universities/getUniversities": {
             "get": {
                 "summary": "Получить список из n универов( сейчас n = 20)",
@@ -45,7 +328,7 @@
                     }
                 ],
                 "tags": [
-                    "Университеты"
+                    "University"
                 ],
                 "responses": {
                     "200": {
@@ -77,7 +360,7 @@
                 "summary": "Получить список из n факультетов( сейчас n = 20)",
                 "description": "Нужен для получения списка универов при регистрации.",
                 "tags": [
-                    "Факультеты"
+                    "University"
                 ],
                 "parameters": [
                     {
@@ -125,7 +408,7 @@
                 "summary": "Добавление нового универа",
                 "description": "Запрос нужен для добавления нового универа",
                 "tags": [
-                    "Университеты"
+                    "University"
                 ],
                 "parameters": [
                     {
@@ -198,7 +481,7 @@
                 "summary": "Добавление нового факультета в универ",
                 "description": "Запрос нужен для добавления нового факультета",
                 "tags": [
-                    "Факультеты"
+                    "University"
                 ],
                 "parameters": [
                     {
@@ -246,6 +529,19 @@
         }
     },
     "definitions": {
+        "subjectItem": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "идентификатор предмета"
+                },
+                "title": {
+                    "type": "string",
+                    "description": "Название предмета"
+                }
+            }
+        },
         "universityItem": {
             "type": "object",
             "properties": {
