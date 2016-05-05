@@ -11,6 +11,8 @@ tags:
     description: Запросы для выполнения действий, связынных со страницей приветствия(авторизация, регистрация, активация аккаунта и восстановление пароля)
   - name: Documents
     description: Запросы для выполнения действий, связынных c базой знаний
+  - name: General
+    description: Запросы общего назначения(форма обратной связи)
  
 # will be prefixed to all paths
 basePath: "/"
@@ -258,7 +260,6 @@ paths:
             description: Произошла внутренняя ошибка сервера
             schema: 
               $ref: '#/definitions/Error'
-  
   /documents/getDocumentsBy:
     get:
       summary: Получение документов по каким-то критериям
@@ -312,7 +313,6 @@ paths:
             description: Произошла внутренняя ошибка сервера
             schema: 
               $ref: '#/definitions/Error' 
-              
   /documents/getDocumentById:
     get:
       summary: Получение подробной информации о документе
@@ -338,7 +338,6 @@ paths:
           description: Ошибка
           schema:
             $ref: '#/definitions/Error'
-            
   /documents/getComments:
     get:
       summary: Получение последних 20 комментариев
@@ -380,7 +379,6 @@ paths:
           description: Ошибка
           schema:
             $ref: '#/definitions/Error'
-
   /document/addComment:
      post:
       summary: Добавление нового комментария
@@ -419,7 +417,6 @@ paths:
           description: Ошибка
           schema:
             $ref: '#/definitions/Error'
-           
   /document/addLike:
      post:
       summary: Добавление like документу
@@ -453,7 +450,6 @@ paths:
           description: Ошибка
           schema:
             $ref: '#/definitions/Error'
-            
   /document/addDislike:
      post:
       summary: Добавление dislike документу
@@ -487,7 +483,6 @@ paths:
           description: Ошибка
           schema:
             $ref: '#/definitions/Error'
-  
   /documents/addPart:
     post:
         summary: Добавление части к документу
@@ -523,7 +518,6 @@ paths:
             description: Произошла внутренняя ошибка сервера
             schema: 
               $ref: '#/definitions/Error'
-  
   /documents/removePart:
     post:
         summary: Удаление части из документа
@@ -562,6 +556,38 @@ paths:
             description: Произошла внутренняя ошибка сервера
             schema: 
               $ref: '#/definitions/Error'
+              
+  /general/feedback:
+    post:
+        summary: Отправка формы обратной связи
+        description: Используется на странице приветствия для реализации формы обратной связи
+        tags: 
+          - General
+        parameters: 
+          - name: idea
+            in: formData
+            description: Предложение
+            type: string
+            required: false
+          - name: topic
+            in: formData
+            description: Тема обращения
+            type: string
+            required: false
+          - name: address
+            in: formData
+            description: Как связаться с пользователем
+            type: string
+            required: false
+        responses:
+          200:
+            description: Все прошло хорошо, данные отправлены
+          
+          500: 
+            description: Произошла внутренняя ошибка сервера
+            schema: 
+              $ref: '#/definitions/Error'
+              
 definitions:
   noActivatedAnswer:
     type: object
@@ -572,6 +598,7 @@ definitions:
       mail: 
         type: string
         description: Почта, на которую отправлено подтверждение
+        
   activateAnswer:
     type: object
     properties:
@@ -647,6 +674,7 @@ definitions:
         description: Массив файлов статики
         items: 
           $ref: '#/definitions/partItem'
+          
   documentItemResponse:
     type: object
     properties:

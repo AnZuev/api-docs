@@ -17,6 +17,10 @@
         {
             "name": "Documents",
             "description": "Запросы для выполнения действий, связынных c базой знаний"
+        },
+        {
+            "name": "General",
+            "description": "Запросы общего назначения(форма обратной связи)"
         }
     ],
     "basePath": "/",
@@ -805,6 +809,49 @@
                         "schema": {
                             "$ref": "#/definitions/Error"
                         }
+                    },
+                    "500": {
+                        "description": "Произошла внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/general/feedback": {
+            "post": {
+                "summary": "Отправка формы обратной связи",
+                "description": "Используется на странице приветствия для реализации формы обратной связи",
+                "tags": [
+                    "General"
+                ],
+                "parameters": [
+                    {
+                        "name": "idea",
+                        "in": "formData",
+                        "description": "Предложение",
+                        "type": "string",
+                        "required": false
+                    },
+                    {
+                        "name": "topic",
+                        "in": "formData",
+                        "description": "Тема обращения",
+                        "type": "string",
+                        "required": false
+                    },
+                    {
+                        "name": "address",
+                        "in": "formData",
+                        "description": "Как связаться с пользователем",
+                        "type": "string",
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Все прошло хорошо, данные отправлены"
                     },
                     "500": {
                         "description": "Произошла внутренняя ошибка сервера",
