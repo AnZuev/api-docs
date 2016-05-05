@@ -46,7 +46,7 @@ paths:
             $ref: '#/definitions/Error'
 
   /subjects/addSubject:
-    get:
+    post:
       summary: Добавление предмета
       description: Нужен для добавления предмета по названию. Доступен только администраторам.
       parameters:
@@ -78,7 +78,7 @@ paths:
             $ref: '#/definitions/Error'
 
   /subjects/changeName:
-    get:
+    post:
       summary: Изменение названия предмета.
       description: Нужен для изменения названия предмета. Доступен только администраторам.
       parameters:
@@ -114,7 +114,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
   /subjects/removeSubject:
-    get:
+    post:
       summary: Удаление предмета
       description: Нужен для удаления предмета по id. Доступен только администраторам.
       parameters:
@@ -146,7 +146,7 @@ paths:
             $ref: '#/definitions/Error'
 
   /subjects/activate:
-    get:
+    post:
       summary: Активация предмета
       description: Нужен для активации предмета по id. Доступен только администраторам.
       parameters:
@@ -178,7 +178,7 @@ paths:
             $ref: '#/definitions/Error'
 
   /subjects/deactivate:
-    get:
+    post:
       summary: Деактивация предмета
       description: Нужен для деактивации предмета по id. Доступен только администраторам
       parameters:
