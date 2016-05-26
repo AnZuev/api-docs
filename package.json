@@ -6,6 +6,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "body-parser": "*",
     "connect": "*",
     "morgan": "*",
     "serve-static":"*"

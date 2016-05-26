@@ -17,6 +17,27 @@ basePath: "/"
 produces:
   - application/json
 paths:
+  /subjects/getAllSubjects:
+    get:
+      summary: Получить список из всех предметов
+      description: Нужен для получения всех предметов, как активированных, так и неактивированных в данный момент
+      tags:
+        - Subjects
+      responses:
+        200:
+          description: Получен список предметов
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/subjectItem'
+        204:
+          description: Ничего не найдено
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Внутренняя ошибка
+          schema:
+            $ref: '#/definitions/Error'
   /subjects/getSubjects:
     get:
       summary: Получить список из N предметов удовлетворяющих запросу
