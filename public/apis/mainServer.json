@@ -58,7 +58,7 @@
                         "name": "studNumber",
                         "in": "formData",
                         "description": "Номер студенческого билета",
-                        "required": true,
+                        "required": false,
                         "type": "string"
                     },
                     {
