@@ -20,7 +20,7 @@
         },
         {
             "name": "General",
-            "description": "Запросы общего назначения(форма обратной связи)"
+            "description": "Запросы общего назначения(форма обратной связи, поиск по пользователям/контактам)"
         }
     ],
     "basePath": "/",
@@ -861,6 +861,44 @@
                     }
                 }
             }
+        },
+        "/general/getContacts": {
+            "get": {
+                "summary": "Получить список контактов",
+                "description": "Нужен для поиска контактов по строке. Если размер строки = 0, тогда возвращаются все контакты",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Строка, которую ввел пользователь",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "General"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Список контактов успешно получен",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/contactItem"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "Контактов не найдено"
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -1129,12 +1167,40 @@
                 }
             }
         },
-        "commentItemRequest": {
+        "contactItem": {
             "type": "object",
             "properties": {
-                "text": {
+                "id": {
                     "type": "string",
-                    "description": "Текст сообщения"
+                    "description": "Идентификатор пользователя"
+                },
+                "username": {
+                    "type": "string",
+                    "description": "Имя пользователя для отображения"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "Группа, в которой учится пользователь"
+                },
+                "university": {
+                    "type": "string",
+                    "description": "Название университета, где учится человек"
+                },
+                "faculty": {
+                    "type": "string",
+                    "description": "Название факультета, где учится человек"
+                },
+                "photo": {
+                    "type": "string",
+                    "description": "Ссылка на фотографию"
+                },
+                "year": {
+                    "type": "number",
+                    "description": "Курс"
+                },
+                "online": {
+                    "type": "boolean",
+                    "description": "Онлайн ли пользователь"
                 }
             }
         },
