@@ -5,7 +5,7 @@
         "description": "Описание API для работы с сервером",
         "version": "0.1.2"
     },
-    "host": "pre-api.istudentapp.ru",
+    "host": "127.0.0.1:3000",
     "schemes": [
         "http"
     ],
@@ -559,7 +559,7 @@
                 }
             }
         },
-        "/document/addComment": {
+        "/documents/addComment": {
             "post": {
                 "summary": "Добавление нового комментария",
                 "description": "Добавление нового комментария к документу.",
@@ -610,7 +610,7 @@
                 }
             }
         },
-        "/document/addLike": {
+        "/documents/addLike": {
             "post": {
                 "summary": "Добавление like документу",
                 "description": "Добавление like документу",
@@ -660,7 +660,7 @@
                 }
             }
         },
-        "/document/addDislike": {
+        "/documents/addDislike": {
             "post": {
                 "summary": "Добавление dislike документу",
                 "description": "Добавление dislike документу",
