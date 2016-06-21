@@ -17,6 +17,10 @@
         {
             "name": "Subjects",
             "description": "Запросы для работы с предметами (добавление, поиск, удаление, смена статуса)."
+        },
+        {
+            "name": "workTypes",
+            "description": "Запросы для работы с типом работ."
         }
     ],
     "basePath": "/",
@@ -24,6 +28,483 @@
         "application/json"
     ],
     "paths": {
+        "/workTypes/getAll": {
+            "get": {
+                "summary": "Получить список из всех типов работ",
+                "description": "Нужен для получения всех типов работ, как активированных, так и неактивированных в данный момент. Есть возможность поиска с использованием начала названия, для этого необходимо поместить в запрос title.",
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "formData",
+                        "description": "строка, которая является названием",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "workTypes"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Получен список типов",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/typeItem"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "Ничего не найдено",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/workTypes/getEnabled": {
+            "get": {
+                "summary": "Получить список из активированных работ",
+                "description": "Нужен для получения активированных работ в данный момент. Есть возможность поиска с использованием начала названия, для этого необходимо поместить в запрос title.",
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "formData",
+                        "description": "строка, которая является названием",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "workTypes"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Получен список типов",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/typeItem"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "Ничего не найдено",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/workTypes/getDisabled": {
+            "get": {
+                "summary": "Получить список из неактивированных работ",
+                "description": "Нужен для получения неактивированных работ в данный момент. Есть возможность поиска с использованием начала названия, для этого необходимо поместить в запрос title.",
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "formData",
+                        "description": "строка, которая является названием",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "workTypes"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Получен список типов",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/typeItem"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "Ничего не найдено",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/workTypes/getById": {
+            "get": {
+                "summary": "Получить тип работы по id",
+                "description": "Нужен для получения активированного в данный момент типа работы с использованием уникального идентификатора.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "formData",
+                        "description": "строка, которая является названием",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "workTypes"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Получен тип",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/typeItem"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка входных данных",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Ничего не найдено",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/workTypes/getNameById": {
+            "get": {
+                "summary": "Получить название типа работы по id",
+                "description": "Нужен для получения названия активированного в данный момент типа работы с использованием уникального идентификатора.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "formData",
+                        "description": "строка, которая является названием",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "workTypes"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Получен тип",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/typeItem"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка входных данных",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Ничего не найдено",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/workTypes/addType": {
+            "post": {
+                "summary": "Добавление типа работы",
+                "description": "Нужен для добавления типа работы по названию.",
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "formData",
+                        "description": "строка, которая является названием",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "workTypes"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Получен id добавленного типа работы и его название.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/typeItem"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Не переданы все необходимые данные",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Ошибка доступа",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/workTypes/setName": {
+            "post": {
+                "summary": "Изменение имени типа работы",
+                "description": "Нужен для изменения имени типа работы.",
+                "parameters": [
+                    {
+                        "name": "newTitle",
+                        "in": "formData",
+                        "description": "строка, которая является новым названием",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "formData",
+                        "description": "id типа работы, который хотим изменить.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "workTypes"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Получен id добавленного типа работы и его название.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/typeItem"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Не переданы все необходимые данные",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Ошибка доступа",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Не найден тип данных",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/workTypes/enable": {
+            "post": {
+                "summary": "Активация типа работы",
+                "description": "Нужен для изменения статуса типа работы.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "formData",
+                        "description": "id типа работы, который хотим изменить.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "workTypes"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Вывод измененнго типа работы.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/typeItem"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Не переданы все необходимые данные",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Ошибка доступа",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Не найден тип данных",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/workTypes/disable": {
+            "post": {
+                "summary": "Деактивация типа работы",
+                "description": "Нужен для изменения статуса типа работы.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "formData",
+                        "description": "id типа работы, который хотим изменить.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "workTypes"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Вывод измененнго типа работы.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/typeItem"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Не переданы все необходимые данные",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Ошибка доступа",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Не найден тип данных",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/workTypes/isExist": {
+            "get": {
+                "summary": "Проверка, есть ли такой тип работы",
+                "description": "Нужен для  проверки, есть ли такой тип работы",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "formData",
+                        "description": "id типа работы",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "workTypes"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Если такой тип работы есть - true , нет - false",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/typeItem"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Не переданы все необходимые данные",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Ошибка доступа",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
         "/subjects/getAllSubjects": {
             "get": {
                 "summary": "Получить список из всех предметов",
@@ -571,6 +1052,19 @@
                 "title": {
                     "type": "string",
                     "description": "Название предмета"
+                }
+            }
+        },
+        "typeItem": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "идентификатор типа работы"
+                },
+                "title": {
+                    "type": "string",
+                    "description": "Название типа работы"
                 }
             }
         },

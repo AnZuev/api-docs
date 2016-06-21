@@ -11,12 +11,337 @@ tags:
     description: Запросы для получения списка универов, факультетов, поиск по ним, добавление и тд.
   - name: Subjects
     description: Запросы для работы с предметами (добавление, поиск, удаление, смена статуса).
-
+  - name: workTypes
+    description: Запросы для работы с типом работ.
+ 
 # will be prefixed to all paths
 basePath: "/"
 produces:
   - application/json
 paths:
+  /workTypes/getAll:
+    get:
+      summary: Получить список из всех типов работ
+      description: Нужен для получения всех типов работ, как активированных, так и неактивированных в данный момент. Есть возможность поиска с использованием начала названия, для этого необходимо поместить в запрос title.
+      parameters:
+        - name:  title
+          in: formData
+          description:  строка, которая является названием
+          required: true
+          type: string
+      tags:
+        - workTypes
+      responses:
+        200:
+          description: Получен список типов
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/typeItem'
+        204: 
+          description: Ничего не найдено
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Внутренняя ошибка
+          schema:
+            $ref: '#/definitions/Error'
+    
+  /workTypes/getEnabled:
+    get:
+      summary: Получить список из активированных работ
+      description: Нужен для получения активированных работ в данный момент. Есть возможность поиска с использованием начала названия, для этого необходимо поместить в запрос title.
+      parameters:
+        - name:  title
+          in: formData
+          description:  строка, которая является названием
+          required: true
+          type: string
+      tags:
+        - workTypes
+      responses:
+        200:
+          description: Получен список типов
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/typeItem'
+        204: 
+          description: Ничего не найдено
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Внутренняя ошибка
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /workTypes/getDisabled:
+    get:
+      summary: Получить список из неактивированных работ
+      description: Нужен для получения неактивированных работ в данный момент. Есть возможность поиска с использованием начала названия, для этого необходимо поместить в запрос title.
+      parameters:
+        - name:  title
+          in: formData
+          description:  строка, которая является названием
+          required: true
+          type: string
+      tags:
+        - workTypes
+      responses:
+        200:
+          description: Получен список типов
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/typeItem'
+        204: 
+          description: Ничего не найдено
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Внутренняя ошибка
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /workTypes/getById:
+    get:
+      summary: Получить тип работы по id
+      description: Нужен для получения активированного в данный момент типа работы с использованием уникального идентификатора. 
+      parameters:
+        - name:  id
+          in: formData
+          description:  строка, которая является названием
+          required: true
+          type: string
+      tags:
+        - workTypes
+      responses:
+        200:
+          description: Получен тип
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/typeItem'
+        404: 
+          description: Ничего не найдено
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Внутренняя ошибка
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: Ошибка входных данных
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /workTypes/getNameById:
+    get:
+      summary: Получить название типа работы по id
+      description: Нужен для получения названия активированного в данный момент типа работы с использованием уникального идентификатора. 
+      parameters:
+        - name:  id
+          in: formData
+          description:  строка, которая является названием
+          required: true
+          type: string
+      tags:
+        - workTypes
+      responses:
+        200:
+          description: Получен тип
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/typeItem'
+        404: 
+          description: Ничего не найдено
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Внутренняя ошибка
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: Ошибка входных данных
+          schema:
+            $ref: '#/definitions/Error'
+  /workTypes/addType:
+    post:
+      summary: Добавление типа работы 
+      description: Нужен для добавления типа работы по названию. 
+      parameters:
+        - name:  title
+          in: formData
+          description:  строка, которая является названием
+          required: true
+          type: string
+      tags:
+        - workTypes
+      responses:
+        200:
+          description: Получен id добавленного типа работы и его название.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/typeItem'
+        400:
+          description: Не переданы все необходимые данные
+          schema:
+            $ref: '#/definitions/Error'
+        401: 
+          description: Ошибка доступа
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Внутренняя ошибка
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /workTypes/setName:
+    post:
+      summary: Изменение имени типа работы 
+      description: Нужен для изменения имени типа работы. 
+      parameters:
+        - name:  newTitle
+          in: formData
+          description:  строка, которая является новым названием
+          required: true
+          type: string
+        - name:  id
+          in: formData
+          description:  id типа работы, который хотим изменить.
+          required: true
+          type: string
+      tags:
+        - workTypes
+      responses:
+        200:
+          description: Получен id добавленного типа работы и его название.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/typeItem'
+        400:
+          description: Не переданы все необходимые данные
+          schema:
+            $ref: '#/definitions/Error'
+        401: 
+          description: Ошибка доступа
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Не найден тип данных
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Внутренняя ошибка
+          schema:
+            $ref: '#/definitions/Error'
+  /workTypes/enable:
+    post:
+      summary: Активация типа работы 
+      description: Нужен для изменения статуса типа работы. 
+      parameters:
+        - name:  id
+          in: formData
+          description:  id типа работы, который хотим изменить.
+          required: true
+          type: string
+      tags:
+        - workTypes
+      responses:
+        200:
+          description: Вывод измененнго типа работы.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/typeItem'
+        400:
+          description: Не переданы все необходимые данные
+          schema:
+            $ref: '#/definitions/Error'
+        401: 
+          description: Ошибка доступа
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Не найден тип данных
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Внутренняя ошибка
+          schema:
+            $ref: '#/definitions/Error'
+  /workTypes/disable:
+    post:
+      summary: Деактивация типа работы 
+      description: Нужен для изменения статуса типа работы. 
+      parameters:
+        - name:  id
+          in: formData
+          description:  id типа работы, который хотим изменить.
+          required: true
+          type: string
+      tags:
+        - workTypes
+      responses:
+        200:
+          description: Вывод измененнго типа работы.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/typeItem'
+        400:
+          description: Не переданы все необходимые данные
+          schema:
+            $ref: '#/definitions/Error'
+        401: 
+          description: Ошибка доступа
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Не найден тип данных
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Внутренняя ошибка
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /workTypes/isExist:
+    get:
+      summary: Проверка, есть ли такой тип работы
+      description: Нужен для  проверки, есть ли такой тип работы
+      parameters:
+        - name:  id
+          in: formData
+          description:  id типа работы
+          required: true
+          type: string
+      tags:
+        - workTypes
+      responses:
+        200:
+          description: Если такой тип работы есть - true , нет - false 
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/typeItem'
+        400:
+          description: Не переданы все необходимые данные
+          schema:
+            $ref: '#/definitions/Error'
+        401: 
+          description: Ошибка доступа
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Внутренняя ошибка
+          schema:
+            $ref: '#/definitions/Error'
+            
+  
   /subjects/getAllSubjects:
     get:
       summary: Получить список из всех предметов
@@ -30,7 +355,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/subjectItem'
-        204:
+        204: 
           description: Ничего не найдено
           schema:
             $ref: '#/definitions/Error'
@@ -57,7 +382,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/subjectItem'
-        204:
+        204: 
           description: Ничего не найдено
           schema:
             $ref: '#/definitions/Error'
@@ -65,10 +390,10 @@ paths:
           description: Внутренняя ошибка
           schema:
             $ref: '#/definitions/Error'
-
+            
   /subjects/addSubject:
     post:
-      summary: Добавление предмета
+      summary: Добавление предмета 
       description: Нужен для добавления предмета по названию. Доступен только администраторам.
       parameters:
         - name:  title
@@ -89,7 +414,7 @@ paths:
           description: Не переданы все необходимые данные
           schema:
             $ref: '#/definitions/Error'
-        401:
+        401: 
           description: Ошибка доступа
           schema:
             $ref: '#/definitions/Error'
@@ -97,7 +422,7 @@ paths:
           description: Внутренняя ошибка
           schema:
             $ref: '#/definitions/Error'
-
+    
   /subjects/changeName:
     post:
       summary: Изменение названия предмета.
@@ -126,17 +451,17 @@ paths:
           description: Не переданы все необходимые данные
           schema:
             $ref: '#/definitions/Error'
-        401:
+        401: 
           description: Ошибка доступа
           schema:
             $ref: '#/definitions/Error'
         500:
           description: Внутренняя ошибка
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Error'      
   /subjects/removeSubject:
     post:
-      summary: Удаление предмета
+      summary: Удаление предмета 
       description: Нужен для удаления предмета по id. Доступен только администраторам.
       parameters:
         - name:  id
@@ -157,7 +482,7 @@ paths:
           description: Не переданы все необходимые данные
           schema:
             $ref: '#/definitions/Error'
-        401:
+        401: 
           description: Ошибка доступа
           schema:
             $ref: '#/definitions/Error'
@@ -165,10 +490,10 @@ paths:
           description: Внутренняя ошибка
           schema:
             $ref: '#/definitions/Error'
-
+            
   /subjects/activate:
     post:
-      summary: Активация предмета
+      summary: Активация предмета 
       description: Нужен для активации предмета по id. Доступен только администраторам.
       parameters:
         - name:  id
@@ -189,7 +514,7 @@ paths:
           description: Не переданы все необходимые данные
           schema:
             $ref: '#/definitions/Error'
-        401:
+        401: 
           description: Ошибка доступа
           schema:
             $ref: '#/definitions/Error'
@@ -197,10 +522,10 @@ paths:
           description: Внутренняя ошибка
           schema:
             $ref: '#/definitions/Error'
-
+            
   /subjects/deactivate:
     post:
-      summary: Деактивация предмета
+      summary: Деактивация предмета 
       description: Нужен для деактивации предмета по id. Доступен только администраторам
       parameters:
         - name: id
@@ -221,7 +546,7 @@ paths:
           description: Не переданы все необходимые данные
           schema:
             $ref: '#/definitions/Error'
-        401:
+        401: 
           description: Ошибка доступа
           schema:
             $ref: '#/definitions/Error'
@@ -229,14 +554,14 @@ paths:
           description: Внутренняя ошибка
           schema:
             $ref: '#/definitions/Error'
-
-
-
-  /universities/getUniversities:
+    
+    
+  
+  /universities/getUniversities: 
     get:
       summary: Получить список из n универов( сейчас n = 20)
       description: Нужен для получения списка универов при регистрации. Можно передать дополнительный параметр title для поиска по названию
-      parameters:
+      parameters: 
         - name: title
           in: query
           description: Строка, по которой ищутся универы
@@ -256,7 +581,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/universityItem'
-        204:
+        204: 
           description: Ничего не найдено
           schema:
             $ref: '#/definitions/Error'
@@ -264,13 +589,13 @@ paths:
           description: Внутренняя ошибка
           schema:
             $ref: '#/definitions/Error'
-  /universities/getFaculties:
+  /universities/getFaculties: 
     get:
       summary: Получить список из n факультетов( сейчас n = 20)
       description: Нужен для получения списка универов при регистрации.
       tags:
         - University
-      parameters:
+      parameters: 
         - name: title
           in: query
           description: Строка, по которой ищутся факультеты
@@ -288,7 +613,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/facultyItem'
-        204:
+        204: 
           description: Ничего не найдено
           schema:
             $ref: '#/definitions/Error'
@@ -363,7 +688,7 @@ paths:
           description: Идентификатор университета
           type: string
           required: true
-
+    
       responses:
         200:
           description: Все прошло хорошо, факультет добавлен
@@ -394,6 +719,16 @@ definitions:
       title:
         type: string
         description: Название предмета
+        
+  typeItem:
+    type: object
+    properties:
+      id:
+        type: string
+        description: идентификатор типа работы
+      title:
+        type: string
+        description: Название типа работы      
 
   universityItem:
     type: object
