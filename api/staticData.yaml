@@ -27,7 +27,7 @@ paths:
         - name:  title
           in: formData
           description:  строка, которая является названием
-          required: true
+          required: false
           type: string
       tags:
         - workTypes
@@ -55,7 +55,7 @@ paths:
         - name:  title
           in: formData
           description:  строка, которая является названием
-          required: true
+          required: false
           type: string
       tags:
         - workTypes
@@ -83,7 +83,7 @@ paths:
         - name:  title
           in: formData
           description:  строка, которая является названием
-          required: true
+          required: false
           type: string
       tags:
         - workTypes

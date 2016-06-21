@@ -37,7 +37,7 @@
                         "name": "title",
                         "in": "formData",
                         "description": "строка, которая является названием",
-                        "required": true,
+                        "required": false,
                         "type": "string"
                     }
                 ],
@@ -78,7 +78,7 @@
                         "name": "title",
                         "in": "formData",
                         "description": "строка, которая является названием",
-                        "required": true,
+                        "required": false,
                         "type": "string"
                     }
                 ],
@@ -119,7 +119,7 @@
                         "name": "title",
                         "in": "formData",
                         "description": "строка, которая является названием",
-                        "required": true,
+                        "required": false,
                         "type": "string"
                     }
                 ],
