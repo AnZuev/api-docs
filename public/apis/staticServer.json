@@ -1,178 +1,278 @@
 {
-  "swagger" : "2.0",
-  "info" : {
-    "version" : "0.0.1",
-    "title" : "Static server"
-  },
-  "host" : "pre-static.istudentapp.ru",
-  "tags" : [ {
-    "name" : "upload",
-    "description" : "Запросы для выполнения pfuheprb"
-  }, {
-    "name" : "get|download",
-    "description" : "Запросы для получения файла"
-  } ],
-  "schemes" : [ "http" ],
-  "paths" : {
-    "/private/files" : {
-      "get" : {
-        "tags" : [ "get|download" ],
-        "summary" : "Получить файл по урлу",
-        "description" : "Нужен для получения файла",
-        "schemes" : [ "http" ],
-        "parameters" : [ {
-          "name" : "url",
-          "in" : "query",
-          "description" : "URL файла",
-          "required" : false,
-          "type" : "string"
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Получен файл",
-            "schema" : {
-              "type" : "file"
-            }
-          },
-          "403" : {
-            "description" : "Не найден файл с таким url и доступный для пользователя",
-            "schema" : {
-              "$ref" : "#/definitions/Error"
-            }
-          },
-          "500" : {
-            "description" : "Серверная ошибка(если в описании указано, что это необработанная ошибка - срочно сообщаем разработчику)",
-            "schema" : {
-              "$ref" : "#/definitions/Error"
-            }
-          }
-        }
-      }
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Private Static Server"
     },
-    "/private/uploadAvatar" : {
-      "post" : {
-        "tags" : [ "upload" ],
-        "description" : "Загрузка аватара на сервер",
-        "parameters" : [ {
-          "name" : "avatar",
-          "in" : "formData",
-          "description" : "Файл для загрузки",
-          "required" : true,
-          "type" : "file"
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Фотография успешно добавлена",
-            "schema" : {
-              "$ref" : "#/definitions/inline_response_200"
-            }
-          },
-          "400" : {
-            "description" : "Ошибка по вине пользователя(недопустимый формат файла, файл слишком большой или еще что-то). code=400, exception=true, message = описанию ошибки",
-            "schema" : {
-              "$ref" : "#/definitions/Error"
-            }
-          },
-          "500" : {
-            "description" : "Серверная ошибка(ошибка соединения с базой данных или еще что-то). code=500, exception=true, message = описанию ошибки. (если в описании указано, что это необработанная ошибка - срочно сообщаем разработчику)",
-            "schema" : {
-              "$ref" : "#/definitions/Error"
-            }
-          }
+    "host": "pre-static.istudentapp.ru",
+    "tags": [
+        {
+            "name": "upload",
+            "description": "Запросы для выполнения загрузки"
+        },
+        {
+            "name": "get|download",
+            "description": "Запросы для получения файла"
         }
-      }
+    ],
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/private/upload/avatar": {
+            "post": {
+                "description": "Загрузка аватара на сервер",
+                "parameters": [
+                    {
+                        "name": "avatar",
+                        "in": "formData",
+                        "description": "Файл для загрузки",
+                        "required": true,
+                        "type": "file"
+                    }
+                ],
+                "tags": [
+                    "upload"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Фотография успешно добавлена",
+                        "schema": {
+                            "title": "result",
+                            "type": "object",
+                            "properties": {
+                                "result": {
+                                    "type": "boolean"
+                                },
+                                "id": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка по вине пользователя(недопустимый формат файла, файл слишком большой или еще что-то). code=400, exception=true, message = описанию ошибки",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Серверная ошибка(ошибка соединения с базой данных или еще что-то). code=500, exception=true, message = описанию ошибки. (если в описании указано, что это необработанная ошибка - срочно сообщаем разработчику)",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/private/upload/document": {
+            "post": {
+                "description": "Загрузка документа для базы знаний",
+                "parameters": [
+                    {
+                        "name": "document",
+                        "in": "formData",
+                        "description": "Файл для загрузки",
+                        "required": true,
+                        "type": "file"
+                    }
+                ],
+                "tags": [
+                    "upload"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Документ успешно добавлен",
+                        "schema": {
+                            "title": "result",
+                            "type": "object",
+                            "properties": {
+                                "result": {
+                                    "type": "boolean"
+                                },
+                                "id": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка по вине пользователя(недопустимый формат файла, файл слишком большой или еще что-то). code=400, exception=true, message = описанию ошибки",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Серверная ошибка(ошибка соединения с базой данных или еще что-то). code=500, exception=true, message = описанию ошибки. (если в описании указано, что это необработанная ошибка - срочно сообщаем разработчику)",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/private/upload/photo": {
+            "post": {
+                "description": "Загрузка фотографии для частного просмотра(фотография внутри диалога) на сервер",
+                "parameters": [
+                    {
+                        "name": "photo",
+                        "in": "formData",
+                        "description": "Файл для загрузки",
+                        "required": true,
+                        "type": "file"
+                    }
+                ],
+                "tags": [
+                    "upload"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Фотография успешно добавлена",
+                        "schema": {
+                            "title": "result",
+                            "type": "object",
+                            "properties": {
+                                "result": {
+                                    "type": "boolean"
+                                },
+                                "url": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка по вине пользователя(недопустимый формат файла, файл слишком большой или еще что-то). code=400, exception=true, message = описанию ошибки",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Серверная ошибка(ошибка соединения с базой данных или еще что-то). code=500, exception=true, message = описанию ошибки. (если в описании указано, что это необработанная ошибка - срочно сообщаем разработчику)",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/files/{id}": {
+            "get": {
+                "summary": "Получить файл по урлу",
+                "description": "Нужен для получения файла",
+                "tags": [
+                    "get|download"
+                ],
+                "schemes": [
+                    "http"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id файла",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Получен файл",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "401": {
+                        "description": "Пользователь не авторизован. Действие запрещено",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Не найден файл с таким url и доступный для пользователя",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Серверная ошибка(если в описании указано, что это необработанная ошибка - срочно сообщаем разработчику)",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/documents/download/{id}/{title}": {
+            "get": {
+                "summary": "Получить документ по урлу",
+                "description": "Нужен для получения файла",
+                "tags": [
+                    "get|download"
+                ],
+                "schemes": [
+                    "http"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id документа",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "title",
+                        "in": "path",
+                        "description": "Название, которое будет у скачанного архива",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Получен архив с документов",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "401": {
+                        "description": "Пользователь не авторизован. Действие запрещено",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Не найден документ с таким url и доступный для пользователя",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Серверная ошибка(если в описании указано, что это необработанная ошибка - срочно сообщаем разработчику)",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        }
     },
-    "/private/uploadPrivateDocument" : {
-      "post" : {
-        "description" : "Загрузка документа для частного просмотра(документ внутри диалога и тд) на сервер",
-        "parameters" : [ {
-          "name" : "document",
-          "in" : "formData",
-          "description" : "Файл для загрузки",
-          "required" : true,
-          "type" : "file"
-        } ],
-        "tags" : [ "get|download" ],
-        "responses" : {
-          "200" : {
-            "description" : "Документ успешно добавлен",
-            "schema" : {
-              "$ref" : "#/definitions/inline_response_200"
+    "definitions": {
+        "Error": {
+            "type": "object",
+            "properties": {
+                "exception": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "number"
+                }
             }
-          },
-          "400" : {
-            "description" : "Ошибка по вине пользователя(недопустимый формат файла, файл слишком большой или еще что-то). code=400, exception=true, message = описанию ошибки",
-            "schema" : {
-              "$ref" : "#/definitions/Error"
-            }
-          },
-          "500" : {
-            "description" : "Серверная ошибка(ошибка соединения с базой данных или еще что-то). code=500, exception=true, message = описанию ошибки. (если в описании указано, что это необработанная ошибка - срочно сообщаем разработчику)",
-            "schema" : {
-              "$ref" : "#/definitions/Error"
-            }
-          }
         }
-      }
-    },
-    "/private/uploadPrivatePhoto" : {
-      "post" : {
-        "description" : "Загрузка фотографии для частного просмотра(документ внутри диалога и тд) на сервер",
-        "parameters" : [ {
-          "name" : "photo",
-          "in" : "formData",
-          "description" : "Файл для загрузки",
-          "required" : true,
-          "type" : "file"
-        } ],
-        "tags" : [ "get|download" ],
-        "responses" : {
-          "200" : {
-            "description" : "Фотография успешно добавлена",
-            "schema" : {
-              "$ref" : "#/definitions/inline_response_200"
-            }
-          },
-          "400" : {
-            "description" : "Ошибка по вине пользователя(недопустимый формат файла, файл слишком большой или еще что-то). code=400, exception=true, message = описанию ошибки",
-            "schema" : {
-              "$ref" : "#/definitions/Error"
-            }
-          },
-          "500" : {
-            "description" : "Серверная ошибка(ошибка соединения с базой данных или еще что-то). code=500, exception=true, message = описанию ошибки. (если в описании указано, что это необработанная ошибка - срочно сообщаем разработчику)",
-            "schema" : {
-              "$ref" : "#/definitions/Error"
-            }
-          }
-        }
-      }
     }
-  },
-  "definitions" : {
-    "Error" : {
-      "type" : "object",
-      "properties" : {
-        "exception" : {
-          "type" : "boolean"
-        },
-        "message" : {
-          "type" : "string"
-        },
-        "code" : {
-          "type" : "number"
-        }
-      }
-    },
-    "inline_response_200" : {
-      "properties" : {
-        "result" : {
-          "type" : "boolean"
-        },
-        "url" : {
-          "type" : "string"
-        }
-      }
-    }
-  }
 }

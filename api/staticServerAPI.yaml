@@ -5,12 +5,12 @@ swagger: '2.0'
 
 # This is your document metadata
 info:
-  version: "0.0.0"
-  title: Static server
+  version: "1.0.0"
+  title: Private Static Server
 host: pre-static.istudentapp.ru
 tags: 
   - name: upload
-    description: Запросы для выполнения pfuheprb
+    description: Запросы для выполнения загрузки
   - name: get|download
     description: Запросы для получения файла
  
@@ -20,7 +20,7 @@ schemes:
 
 paths:
   # This is a path endpoint. Change it.
-  /private/uploadAvatar:
+  /private/upload/avatar:
     # This is a HTTP operation
     post:
       # Describe this verb here. Note: you can use markdown
@@ -45,7 +45,7 @@ paths:
             properties:
               result:
                 type: boolean
-              url:
+              id:
                 type: string
         400:
           description: Ошибка по вине пользователя(недопустимый формат файла, файл слишком большой или еще что-то). code=400, exception=true, message = описанию ошибки
@@ -56,11 +56,11 @@ paths:
            (если в описании указано, что это необработанная ошибка - срочно сообщаем разработчику)
           schema:
             $ref: '#/definitions/Error'
-  /private/uploadPrivateDocument:
+  /private/upload/document:
     # This is a HTTP operation
     post:
       # Describe this verb here. Note: you can use markdown
-      description:  Загрузка документа для частного просмотра(документ внутри диалога и тд) на сервер
+      description:  Загрузка документа для базы знаний
       # This is array of GET operation parameters:
       parameters:
         - name: document
@@ -69,7 +69,7 @@ paths:
           required: true
           type: file
       tags:
-               - upload
+        - upload
       # Expected responses for this operation:
       responses:
         # Response code
@@ -81,7 +81,7 @@ paths:
             properties:
               result:
                 type: boolean
-              url:
+              id:
                 type: string
         400:
           description: Ошибка по вине пользователя(недопустимый формат файла, файл слишком большой или еще что-то). code=400, exception=true, message = описанию ошибки
@@ -92,11 +92,11 @@ paths:
             (если в описании указано, что это необработанная ошибка - срочно сообщаем разработчику)
           schema:
             $ref: '#/definitions/Error'
-  /private/uploadPrivatePhoto:
+  /private/upload/photo:
     # This is a HTTP operation
     post:
       # Describe this verb here. Note: you can use markdown
-      description:  Загрузка фотографии для частного просмотра(документ внутри диалога и тд) на сервер
+      description:  Загрузка фотографии для частного просмотра(фотография внутри диалога) на сервер
       # This is array of GET operation parameters:
       parameters:
         - name: photo
@@ -105,7 +105,7 @@ paths:
           required: true
           type: file
       tags:
-               - upload
+        - upload
       # Expected responses for this operation:
       responses:
         # Response code
@@ -129,7 +129,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
   
-  /files:
+  /files/{id}:
     get:
       summary: Получить файл по урлу
       description: Нужен для получения файла
@@ -137,19 +137,60 @@ paths:
         - get|download
       schemes:
         - http
-      parameters: 
-        - name: url
-          in: query
-          description: URL файла
-          required: false
+      parameters:
+        - name: id
+          in: path
+          description: Id файла
+          required: true
           type: string
       responses:
         200:
           description: Получен файл
           schema:
             type: file
-        403: 
+        401: 
+          description: Пользователь не авторизован. Действие запрещено
+          schema:
+            $ref: '#/definitions/Error'
+        404: 
           description: Не найден файл с таким url и доступный для пользователя
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Серверная ошибка(если в описании указано, что это необработанная ошибка - срочно сообщаем разработчику)
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /documents/download/{id}/{title}:
+    get:
+      summary: Получить файл по урлу
+      description: Нужен для получения файла
+      tags:
+        - get|download
+      schemes:
+        - http
+      parameters:
+        - name: id
+          in: path
+          description: Id документа
+          required: true
+          type: string
+        - name: title
+          in: path
+          description: Название, которое будет у скачанного архива
+          required: true
+          type: string 
+      responses:
+        200:
+          description: Получен архив с документов
+          schema:
+            type: file
+        401: 
+          description: Пользователь не авторизован. Действие запрещено
+          schema:
+            $ref: '#/definitions/Error'
+        404: 
+          description: Не найден документ с таким url и доступный для пользователя
           schema:
             $ref: '#/definitions/Error'
         500:
