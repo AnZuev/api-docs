@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "version": "1.0.0",
+        "version": "1.0.1",
         "title": "Private Static Server"
     },
     "host": "pre-static.istudentapp.ru",
@@ -157,7 +157,7 @@
                 }
             }
         },
-        "/files/{id}": {
+        "/private/files/{id}": {
             "get": {
                 "summary": "Получить файл по урлу",
                 "description": "Нужен для получения файла",
@@ -204,7 +204,7 @@
                 }
             }
         },
-        "/documents/download/{id}/{title}": {
+        "/private/documents/download/{id}/{title}": {
             "get": {
                 "summary": "Получить документ по урлу",
                 "description": "Нужен для получения файла",

@@ -5,7 +5,7 @@ swagger: '2.0'
 
 # This is your document metadata
 info:
-  version: "1.0.0"
+  version: "1.0.1"
   title: Private Static Server
 host: pre-static.istudentapp.ru
 tags: 
@@ -129,7 +129,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
   
-  /files/{id}:
+  /private/files/{id}:
     get:
       summary: Получить файл по урлу
       description: Нужен для получения файла
@@ -161,7 +161,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
             
-  /documents/download/{id}/{title}:
+  /private/documents/download/{id}/{title}:
     get:
       summary: Получить файл по урлу
       description: Нужен для получения файла
