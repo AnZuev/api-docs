@@ -5,7 +5,7 @@
         "description": "Описание API для работы с сервером",
         "version": "0.1.2"
     },
-    "host": "127.0.0.1:3000",
+    "host": "pre-api.istudentapp.ru",
     "schemes": [
         "http"
     ],
