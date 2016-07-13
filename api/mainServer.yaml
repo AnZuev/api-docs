@@ -379,7 +379,7 @@ paths:
           description: Ошибка
           schema:
             $ref: '#/definitions/Error'
-  /document/addComment:
+  /documents/addComment:
      post:
       summary: Добавление нового комментария
       description: Добавление нового комментария к документу.
@@ -417,7 +417,7 @@ paths:
           description: Ошибка
           schema:
             $ref: '#/definitions/Error'
-  /document/addLike:
+  /documents/addLike:
      post:
       summary: Добавление like документу
       description: Добавление like документу
@@ -450,7 +450,7 @@ paths:
           description: Ошибка
           schema:
             $ref: '#/definitions/Error'
-  /document/addDislike:
+  /documents/addDislike:
      post:
       summary: Добавление dislike документу
       description: Добавление dislike документу
@@ -663,13 +663,13 @@ definitions:
   partItem:
       type: object
       properties:
-        id: 
+        documentId:
           type: string
-          description: id файла в коллекцтт files
-        url:
+          description: id документа, к которому добавляем часть
+        newPartUrl:
           type: string
-          description: ссылка для доступа к файлу
-  
+          description: url файла, который добавляем к документу
+
   documentItemRequest:
     type: object
     properties:
@@ -680,21 +680,12 @@ definitions:
         type: object
         description: Информация для поиска
         properties:
-          university:
-            type: string
-            description: Id университета(если не передано, используется универ пользователя)
-          faculty:
-            type: string
-            description: Id факультета(если не передано, используется факультет пользователя)
           subject:
             type: string
             description: Id предмета(из staticData)
           type:
             type: string
             description: Id типа(из staticData)
-          year:
-            type: integer
-            description: Id предмета(из staticData)
       parts:
         type: array
         description: Массив файлов статики
